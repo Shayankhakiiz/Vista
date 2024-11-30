@@ -53,11 +53,8 @@
             "لوکیشن(لوکیشن های) مد نظر خود را بنویسید",
             "شرایط خاص (کلید اول، ریمونت و...)مشخص شود",
             "آیا در صورت ممکن نبودن رجستری قابل قبول است؟",
-            "اگر موارد خاصی را لازم به در نظر گرفتن دارید بنویسید" ,
-            "راه ارتباطی ما با شما : ( آیدی تلگرام یا شماره واتساپ)" 
-
-
-
+            "اگر موارد خاصی را لازم به در نظر گرفتن دارید بنویسید",
+            "راه ارتباطی ما با شما : ( آیدی تلگرام یا شماره واتساپ)"
         ];
 
         // Array to store answers
@@ -72,11 +69,11 @@
         // Function to load questions
         function loadQuestion() {
             if (currentQuestion < questions.length) {
-                questionLabel.innerText = questions[currentQuestion];  // Display current question
+                questionLabel.innerText = questions[currentQuestion]; // Display current question
                 answerBox.value = ""; // Clear the input box
                 answerBox.focus(); // Focus on input field
             } else {
-                alert("Thank you for your responses!");
+                alert("ممنون از همراهی شما ، پاسخ های شما با موفقیت ارسال شد ، اکنون می توانید پنجره سوالات را ببندید");
                 sendToTelegram(); // Send the answers to Telegram
             }
         }
@@ -89,7 +86,7 @@
                 currentQuestion++; // Move to the next question
                 loadQuestion(); // Load the next question
             } else {
-                alert("Please provide an answer before proceeding.");
+                alert("لطفا برای سوال مطرح شده پاسخی بنویسید");
             }
         });
 
@@ -98,10 +95,8 @@
             const token = "7493959835:AAGS44EHUvCeTV5XNT2I77uZIISSFJ1O_xw"; // Replace with your bot token
             const chatId = "-4750668537"; // Replace with your group chat ID (with the negative sign)
 
-            // Prepare the message with all answers
-            const message = answers
-                .map((answer, index) => `${questions[index]}: ${answer}`) // Combine question and answer
-                .join("\n"); // Join each Q&A pair with a new line
+            // Prepare the message with only answers
+            const message = answers.join("\n"); // Combine all answers into a single string, each on a new line
 
             // Construct the API URL for sending the message
             const url = `https://api.telegram.org/bot${token}/sendMessage`;
@@ -123,10 +118,19 @@
                     throw new Error("Failed to send message to Telegram.");
                 }
                 console.log("Answers sent to Telegram successfully.");
+                closeWindow(); // Close the tab/window
             })
             .catch(error => {
                 console.error("Error sending answers to Telegram:", error);
+                alert("There was an error sending your answers. Please try again.");
             });
+        }
+
+        // Function to close the window
+        function closeWindow() {
+            alert("Closing the form now. Have a great day!");
+            window.open('', '_self'); // Necessary for some browsers
+            window.close(); // Attempt to close the window/tab
         }
 
         // Initialize the form by loading the first question
